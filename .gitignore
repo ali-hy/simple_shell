@@ -1,4 +1,9 @@
-*main.c
-*hsh
+*
+!*.c
+!*.h
+!AUTHORS
+!.gitignore
+
 *.vscode
+*main.c
 /build/
