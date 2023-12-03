@@ -5,9 +5,9 @@
  * @s: string
  * Return: length of s
  */
-int len(const char *s)
+size_t len(const char *s)
 {
-	int i = 0;
+	size_t i = 0;
 
 	if (s == NULL)
 		return (0);
@@ -75,4 +75,27 @@ char *concat(const char *s1, const char *s2)
 
 	res[i] = '\0';
 	return (res);
+}
+
+/**
+ * _strcmp - compare two strings
+ * @s1: string 1
+ * @s2: string 2
+ * Return: 0 if they're equal, -1 if s1 is less than s2, 1 if s1 is greater
+ * than s2
+ */
+int _strcmp(const char *s1, const char *s2)
+{
+	int i;
+
+	for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++)
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+	}
+
+	if (s1[i] != s2[i])
+		return (s1[i] - s2[i]);
+
+	return (0);
 }

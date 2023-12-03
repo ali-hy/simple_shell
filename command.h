@@ -1,13 +1,13 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-typedef enum CMD_TYPE
+typedef enum cmd_type
 {
-	builtin,
-	file,
-	multi,
-	multi_and,
-	multi_or
+	BUILTIN,
+	EXE_FILE,
+	MULTI,
+	MULTI_AND,
+	MULTI_OR
 } cmd_type;
 
 /**
@@ -20,6 +20,11 @@ struct cmd
 };
 
 /**
+ * cmd - type for struct cmd
+ */
+typedef struct cmd cmd;
+
+/**
  * struct builtin_cmd - describes a builtin command
  * @type: ...
  * @builtin_func: function to call to execute builtin
@@ -27,7 +32,7 @@ struct cmd
 struct builtin_cmd
 {
 	cmd_type type;
-	void (*builtin_func)(int);
+	int (*builtin_func)(char **args, char ***env);
 };
 
 /**
@@ -55,11 +60,6 @@ struct multi_cmd
 };
 
 /**
- * cmd - type for struct cmd
- */
-typedef struct cmd cmd;
-
-/**
  * builtin_cmd - type for struct builtin_cmd
  */
 typedef struct builtin_cmd builtin_cmd;
@@ -73,5 +73,10 @@ typedef struct file_cmd file_cmd;
  * multi_cmd - type for multiple commands
  */
 typedef struct multi_cmd multi_cmd;
+
+/* MAKECOMMAND */
+cmd *make_builtincmd(void (*callback)(char **));
+cmd *make_execmd(char *);
+cmd *make_multicmd(char *);
 
 #endif /* COMMAND_H */
