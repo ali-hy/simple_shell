@@ -94,11 +94,50 @@ char *find_in_PATH(const char *command, char **env)
 	{
 		pathname = path_concat(paths[i], command);
 		if (access(pathname, F_OK) == 0)
-		{
 			return (pathname);
-		}
+
 		free(pathname);
 	}
 
 	return (NULL);
+}
+
+/**
+ * can_access - check access to file
+ * Also sets the correct exit code if exiting is necessary
+ * @command: command entered by user
+ * @pathname: pathname to file
+ * Return: 1 if there's access, 0 if there's none
+ */
+int can_access(const char *command, const char *pathname)
+{
+	if (pathname != NULL)
+	{
+		if (access(pathname, F_OK) != 0)
+		{
+			print_err(command, "not found");
+			exit_status(SET_VARIABLE, 127);
+			return (0);
+		}
+		if (access(pathname, X_OK) != 0)
+		{
+			print_err(command, "Permission denied");
+			exit_status(SET_VARIABLE, 126);
+			return (0);
+		}
+		if (is_dir(pathname))
+		{
+			print_err(command, "Permission denied");
+			exit_status(SET_VARIABLE, 127);
+			return (0);
+		}
+	}
+	else
+	{
+		print_err(command, "not found");
+		exit_status(SET_VARIABLE, 127);
+		return (0);
+	}
+
+	return (1);
 }

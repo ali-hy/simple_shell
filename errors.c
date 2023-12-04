@@ -17,17 +17,16 @@ int _errno(int update)
 
 /**
  * print_err - print an error to stderr
- * @argv: program args
  * @command: command where error happend
  * @error: error messsage content
  * Return: length of printed error
  */
-int print_err(char **argv, const char *command, const char *error)
+int print_err(const char *command, const char *error)
 {
 	char *err = NULL, *temp = NULL;
 	size_t length;
 
-	temp = concat(argv[0], ": ");
+	temp = concat(prog_args(NULL)[0], ": ");
 	err = concat(temp, ultos(_errno(0)));
 	free(temp);
 

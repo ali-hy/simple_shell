@@ -88,6 +88,18 @@ int _strcmp(const char *s1, const char *s2)
 {
 	int i;
 
+	if (s1 == NULL)
+	{
+		if (s2 == NULL)
+			return (0);
+		else
+			return (-s2[0]);
+	}
+	else if (s2 == NULL)
+	{
+		return (s1[0]);
+	}
+
 	for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++)
 	{
 		if (s1[i] != s2[i])
@@ -98,4 +110,56 @@ int _strcmp(const char *s1, const char *s2)
 		return (s1[i] - s2[i]);
 
 	return (0);
+}
+
+/**
+ * _strtok - get a token from a string
+ * @str: token start
+ * @delim: string of delimiters
+ * Return: token start
+ */
+char *_strtok(char *str, const char *delim)
+{
+	static char *start;
+	int i = 0;
+	char *res = NULL;
+
+	if (str != NULL)
+		start = str;
+
+	/* skip any delimiters at the start */
+	while (start[i] != '\0')
+	{
+		if (find_char(delim, start[i]) == -1)
+			break;
+		i++;
+	}
+
+	start += i;
+	i = 0;
+
+	/* skip until you reach a delimiter */
+	while (start[i] != '\0')
+	{
+		if (find_char(delim, start[i]) != -1)
+			break;
+
+		i++;
+	}
+
+	if (i == 0)
+		return (NULL);
+
+	if (start[i] == '\0')
+	{
+		res = start;
+		start += +1;
+		return (res);
+	}
+
+	start[i] = '\0';
+	res = start;
+	start += i + 1;
+
+	return (res);
 }

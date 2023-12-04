@@ -8,9 +8,21 @@
  */
 int exit_builtin(char **args, char ***env)
 {
-	UNUSED(args);
+	int code = exit_status(GET_VARIABLE, 0);
+	char *err;
+
 	UNUSED(env);
-	exit(0);
+	if (args[1] != NULL)
+		code = _stoui(args[1]);
+
+	if (code < 0)
+	{
+		err = concat("Illegal number: ", args[1]);
+		print_err("exit", err);
+		return (2);
+	}
+
+	exit(code);
 	return (-1);
 }
 

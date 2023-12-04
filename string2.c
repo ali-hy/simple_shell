@@ -31,14 +31,53 @@ char **split(const char *str, const char *delim)
 	char **res = NULL, *s_copy = copy(str), *tok_start = NULL;
 	size_t token_count = 0;
 
-	tok_start = strtok(s_copy, delim);
+	tok_start = _strtok(s_copy, delim);
 	while (tok_start != NULL)
 	{
 		push((void ***)&res, &token_count, (void *)tok_start);
-		tok_start = strtok(NULL, delim);
+		tok_start = _strtok(NULL, delim);
 	}
 	push((void ***)&res, &token_count, (void *)tok_start);
 	token_count--;
 
 	return (res);
+}
+
+/**
+ * copy_to - copy from a source string to destination string
+ * @source: source string
+ * @dest: destination string
+ * Return: number of characters copied
+ */
+int copy_to(const char *source, char *dest)
+{
+	int i = 0;
+
+	while (source[i] != '\0')
+	{
+		dest[i] = source[i];
+		i++;
+	}
+	dest[i] = source[i];
+
+	return (i - 1);
+}
+
+/**
+ * find_char - find character in a string
+ * @str: string to search in
+ * @c: character to search for
+ * Return: index of c in str, -1 if c isn't found in str
+ */
+int find_char(const char *str, char c)
+{
+	int i = 0;
+
+	while (str[i] != '\0')
+	{
+		if (str[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
 }

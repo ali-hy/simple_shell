@@ -10,6 +10,7 @@
 #include <sys/fcntl.h>
 
 #define UNUSED(x) (void)(x)
+#define IN_BUFFER_SIZE 128
 
 #include "string.h"
 #include "command.h"
@@ -21,10 +22,17 @@ enum access_options
 	GET_VARIABLE
 };
 int exit_status(enum access_options, int);
+char **prog_args(char **value);
+
+/* TEST */
+void test(void);
+
+/* MEMORY */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
 /* INPUT */
 char **get_input(int fd);
-int get_line(char **lineptr, size_t *n, int *fd);
+int get_line(char **lineptr, int *n, int fd);
 char **line_to_tokens(char *line);
 
 /* ALIASES */
@@ -41,9 +49,10 @@ int is_path(const char *command);
 int is_dir(const char *pathname);
 char *path_concat(const char *s1, const char *s2);
 char *find_in_PATH(const char *command, char **env);
+int can_access(const char *command, const char *pathname);
 
 /* GETCOMMAND */
-cmd *getcommand(const char *command, char **argv, char ***env);
+cmd *getcommand(const char *command, char ***env);
 
 /* RUNCOMMAND */
 int runcommand(cmd *command, char **args, char ***env);
@@ -53,7 +62,7 @@ int run_multi(multi_cmd *command, char **args, char ***env);
 
 /* ERRORS */
 int _errno(int update);
-int print_err(char **argv, const char *command, const char *error);
+int print_err(const char *command, const char *error);
 
 /* ENV */
 int get_env(const char *varname, char **env);
