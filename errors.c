@@ -23,12 +23,15 @@ int _errno(int update)
  */
 int print_err(const char *command, const char *error)
 {
-	char *err = NULL, *temp = NULL;
+	char *err = NULL, *temp = NULL, *temp_num = NULL;
 	size_t length;
+	int res = 0;
 
 	temp = concat(prog_args(NULL)[0], ": ");
-	err = concat(temp, ultos(_errno(0)));
+	temp_num = ultos(_errno(0));
+	err = concat(temp, temp_num);
 	free(temp);
+	free(temp_num);
 
 	temp = err;
 	err = concat(temp, ": ");
@@ -51,5 +54,7 @@ int print_err(const char *command, const char *error)
 	free(temp);
 
 	length = len(err);
-	return (write(STDERR_FILENO, err, length));
+	res = write(STDERR_FILENO, err, length);
+	free(err);
+	return (res);
 }

@@ -23,7 +23,7 @@ int is_path(const char *command)
  */
 char *path_concat(const char *s1, const char *s2)
 {
-	int i, l1 = len(s1), l2 = len(s2), add_separator = 0;
+	int i, j, l1 = len(s1), l2 = len(s2), add_separator = 0;
 	int l_res = l1 + l2;
 	char *res;
 
@@ -45,12 +45,11 @@ char *path_concat(const char *s1, const char *s2)
 		res[i] = s1[i];
 
 	if (add_separator)
-		res[i] = '/';
+		res[i++] = '/';
 
-	i++;
-	for (; i < l_res; i++)
+	for (j = 0; i < l_res; i++, j++)
 	{
-		res[i] = s2[i - l1 - add_separator];
+		res[i] = s2[j];
 	}
 
 	res[i] = '\0';
@@ -73,32 +72,44 @@ int is_dir(const char *pathname)
 /**
  * find_in_PATH - finds a file in PATH
  * @command: command with the file name
- * @env: process environment
+ * @temp: temporary var to gree after split
  * Return: a string of the pathname if found, NULL if not found
  */
-char *find_in_PATH(const char *command, char **env)
+char *find_in_PATH(const char *command, char **temp)
 {
-	char *PATH, **paths, *pathname;
-	int i;
+	char *PATH, **paths, *pathname, **env = _env(GET_VARIABLE, NULL);
+	int path_index, i;
 
-	PATH = env[get_env("PATH", env)];
+	path_index = get_env("PATH");
+	if (path_index == -1)
+		return (copy(""));
+
+	PATH = env[path_index];
 
 	/* get start of the PATH value */
 	while (*PATH != '=')
 		PATH++;
 	PATH++;
 
-	paths = split(PATH, ":");
+	if (*PATH == '\0')
+		return (copy(""));
+
+	paths = split(PATH, ":", temp);
 
 	for (i = 0; paths[i] != NULL; i++)
 	{
 		pathname = path_concat(paths[i], command);
 		if (access(pathname, F_OK) == 0)
+		{
+			free(paths);
 			return (pathname);
+		}
 
 		free(pathname);
 	}
 
+	if (paths != NULL)
+		free(paths);
 	return (NULL);
 }
 
@@ -131,12 +142,6 @@ int can_access(const char *command, const char *pathname)
 			exit_status(SET_VARIABLE, 127);
 			return (0);
 		}
-	}
-	else
-	{
-		print_err(command, "not found");
-		exit_status(SET_VARIABLE, 127);
-		return (0);
 	}
 
 	return (1);

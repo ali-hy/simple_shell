@@ -24,14 +24,22 @@ int starts_with(const char *str, const char *prefix)
  * original)
  * @str: string to split
  * @delim: string of allowed delimiters
+ * @res_str: a string where the copy of str (delimited with '\0') will be
+ * placed
  * Return: NULL-terminated array of strings
  */
-char **split(const char *str, const char *delim)
+char **split(const char *str, const char *delim, char **res_str)
 {
-	char **res = NULL, *s_copy = copy(str), *tok_start = NULL;
+	char **res = NULL, *tok_start = NULL;
 	size_t token_count = 0;
 
-	tok_start = _strtok(s_copy, delim);
+	if (str == NULL)
+	{
+		*res_str = NULL;
+		return (NULL);
+	}
+	*res_str = copy(str);
+	tok_start = _strtok((*res_str), delim);
 	while (tok_start != NULL)
 	{
 		push((void ***)&res, &token_count, (void *)tok_start);

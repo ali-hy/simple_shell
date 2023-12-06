@@ -5,14 +5,9 @@
  */
 void test(void)
 {
-	char *res = NULL;
-	char inp[] = "okay so what my friend\n";
+	int i = 0;
 
-	res = _strtok(inp, " \n");
-	while (res != NULL)
-	{
-		printf("%s, ", res);
-		res = _strtok(NULL, " \n");
-	}
-	printf("[n/a tokens]\n");
+	printf("trying to print: %s\n", copy(""));
+
+	printf("[%d tokens]\n", i);
 }

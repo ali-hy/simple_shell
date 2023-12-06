@@ -16,22 +16,35 @@
 #include "command.h"
 
 /* GLOBAL */
+/**
+ * enum access_options - options for global var functions
+ * @SET_VARIABLE: use to set a global
+ * @GET_VARIABLE: uset to get a variable without updating global
+ */
 enum access_options
 {
 	SET_VARIABLE,
 	GET_VARIABLE
 };
 int exit_status(enum access_options, int);
+char **_env(enum access_options access_option, char **value);
 char **prog_args(char **value);
+void my_exit(int code);
+
+void init_program(int ac, char **argv, char **env);
+
+/* FLOW */
+int should_exit(cmd *command, int exit_code);
 
 /* TEST */
 void test(void);
 
 /* MEMORY */
+int my_free(void **ptr);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
 /* INPUT */
-char **get_input(int fd);
+char **get_input(int fd, char **temp);
 int get_line(char **lineptr, int *n, int fd);
 char **line_to_tokens(char *line);
 
@@ -48,24 +61,26 @@ char *ultos(unsigned long ul);
 int is_path(const char *command);
 int is_dir(const char *pathname);
 char *path_concat(const char *s1, const char *s2);
-char *find_in_PATH(const char *command, char **env);
+char *find_in_PATH(const char *command, char **temp);
 int can_access(const char *command, const char *pathname);
 
 /* GETCOMMAND */
-cmd *getcommand(const char *command, char ***env);
+cmd *getcommand(const char *command, char **temp);
 
 /* RUNCOMMAND */
-int runcommand(cmd *command, char **args, char ***env);
-int run_exe(file_cmd *command, char **args, char **env);
-int run_builtin(builtin_cmd *command, char **args, char ***env);
-int run_multi(multi_cmd *command, char **args, char ***env);
+int runcommand(cmd *command, char **args);
+int run_exe(file_cmd *command, char **args);
+int run_builtin(builtin_cmd *command, char **args);
+int run_multi(multi_cmd *command, char **args);
 
 /* ERRORS */
 int _errno(int update);
 int print_err(const char *command, const char *error);
 
 /* ENV */
-int get_env(const char *varname, char **env);
+void init_env(char **env);
+void free_env_end(void);
+int get_env(const char *varname);
 
 /* BUILTIN */
 /**
@@ -76,13 +91,13 @@ int get_env(const char *varname, char **env);
 struct builtin_f
 {
 	char *command;
-	int (*func)(char **args, char ***env);
+	int (*func)(char **args);
 };
 typedef struct builtin_f builtin_f;
 cmd *find_builtin(const char *command);
 
-int exit_builtin(char **args, char ***env);
-int env_builtin(char **args, char ***env);
+int exit_builtin(char **args);
+int env_builtin(char **args);
 
 /* SPECIAL CHARS */
 char *resolve_special(char *s);

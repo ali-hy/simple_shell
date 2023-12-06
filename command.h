@@ -1,6 +1,14 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+/**
+ * enum cmd_type - type of a cmd struct
+ * @BUILTIN: ...
+ * @EXE_FILE: ...
+ * @MULTI: ...
+ * @MULTI_AND: ...
+ * @MULTI_OR: ...
+ */
 typedef enum cmd_type
 {
 	BUILTIN,
@@ -32,7 +40,7 @@ typedef struct cmd cmd;
 struct builtin_cmd
 {
 	cmd_type type;
-	int (*builtin_func)(char **args, char ***env);
+	int (*builtin_func)(char **args);
 };
 
 /**

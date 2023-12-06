@@ -1,31 +1,6 @@
 #include "main.h"
 
 /**
- * push - push a pointer into an array of pointers
- * @arr: pointer to array of pointers
- * @length: pointer to length of current array
- * @ptr: pointer to push to array
- * Return: 1 on success, 0 on failure
- */
-int push(void ***arr, size_t *length, void *ptr)
-{
-	void **curr = *arr,
-		 **res = malloc((*length + 1) * sizeof(void *));
-	size_t i;
-
-	for (i = 0; i < *length; i++)
-		res[i] = curr[i];
-
-	res[i] = ptr;
-	if (curr)
-		free(curr);
-
-	(*length)++;
-	*arr = res;
-	return (1);
-}
-
-/**
  * get_line - get a new line
  * @line_ptr: pointer to string that will hold lin
  * @n: pointer to max size to read
@@ -45,16 +20,13 @@ int get_line(char **line_ptr, int *n, int fd)
 		read_size = 0;
 		i = 0;
 	}
-
 	while (!found_newline)
 	{
 		if (j >= *n)
 		{
-			temp = _realloc(*line_ptr, *n, *n + 128);
-			if (*line_ptr != NULL)
-				free(*line_ptr);
+			temp = _realloc(*line_ptr, *n, *n + IN_BUFFER_SIZE);
 			*line_ptr = temp;
-			*n += 128;
+			*n += IN_BUFFER_SIZE;
 		}
 		if (i >= read_size)
 		{
@@ -69,13 +41,11 @@ int get_line(char **line_ptr, int *n, int fd)
 				found_newline = 1;
 
 			(*line_ptr)[j] = buffer[i];
-
 			j++, i++;
 			if (found_newline)
 				break;
 		}
 	}
-
 	(*line_ptr)[j] = '\0';
 
 	return (1);
@@ -84,29 +54,28 @@ int get_line(char **line_ptr, int *n, int fd)
 /**
  * get_input - get resolved line of input
  * @fd: file descriptor of the file to read from
+ * @temp: string to be freed after split
  * Return: length of input
  */
-char **get_input(int fd)
+char **get_input(int fd, char **temp)
 {
-	char **res = NULL, *line = NULL, *temp = NULL;
+	char **res = NULL, *line = NULL;
 	int getline_status = 0;
 	int line_len = 0;
 
 	if (isatty(fd))
 		write(STDOUT_FILENO, "$ ", 2);
 
-	getline_status = get_line(&temp, &line_len, STDIN_FILENO);
+	getline_status = get_line(&line, &line_len, fd);
 
 	if (getline_status == -1)
 	{
-		free(temp);
+		free(line);
 		return (NULL);
 	}
 
-	line = copy(temp);
-	free(temp);
+	res = split(line, " \n", temp);
 
-	res = split(line, " \n");
-
+	free(line);
 	return (res);
 }

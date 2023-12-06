@@ -26,9 +26,13 @@ size_t len(const char *s)
 char *copy(const char *s)
 {
 	int i, length = len(s);
-	char *res = malloc(length + 1);
+	char *res;
 
-	if (res == NULL || s == NULL)
+	if (s == NULL)
+		return (NULL);
+
+	res = malloc(length + 1);
+	if (res == NULL)
 		return (NULL);
 
 	for (i = 0; i < length; i++)
@@ -127,36 +131,30 @@ char *_strtok(char *str, const char *delim)
 	if (str != NULL)
 		start = str;
 
-	/* skip any delimiters at the start */
-	while (start[i] != '\0')
+	while (start[i] != '\0') /* skip any delimiters at the start */
 	{
 		if (find_char(delim, start[i]) == -1)
 			break;
 		i++;
 	}
-
 	start += i;
 	i = 0;
 
-	/* skip until you reach a delimiter */
-	while (start[i] != '\0')
+	while (start[i] != '\0') /* skip until you reach a delimiter */
 	{
 		if (find_char(delim, start[i]) != -1)
 			break;
 
 		i++;
 	}
-
 	if (i == 0)
 		return (NULL);
-
 	if (start[i] == '\0')
 	{
 		res = start;
-		start += +1;
+		start += i;
 		return (res);
 	}
-
 	start[i] = '\0';
 	res = start;
 	start += i + 1;

@@ -16,7 +16,7 @@ char *_strtok(char *s, const char *delim);
 int push(void ***arr, size_t *length, void *ptr);
 int starts_with(const char *str, const char *prefix);
 int copy_to(const char *source, char *dest);
-char **split(const char *str, const char *delim);
+char **split(const char *str, const char *delim, char **res_str);
 int find_char(const char *str, char c);
 
 /* STRING_3 */
