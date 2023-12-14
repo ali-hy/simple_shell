@@ -34,7 +34,7 @@ int should_exit(cmd *command, int exit_code)
  */
 int main(int ac, char **argv, char **env)
 {
-	char **args = NULL, *temp1 = NULL, *temp2 = NULL;
+	char **args = NULL, *input_split_temp = NULL, *path_split_temp = NULL;
 	cmd *command = NULL;
 	int exit_code = 0, in_fd;
 
@@ -43,20 +43,20 @@ int main(int ac, char **argv, char **env)
 
 	while (1)
 	{
-		args = get_input(in_fd, &temp1);
+		args = get_input(in_fd, &input_split_temp);
 		if (args == NULL)
 			break;
 		if (args[0] == NULL)
 		{
-			free(temp1);
+			free(input_split_temp);
 			free(args);
 			continue;
 		}
-		command = getcommand(args[0], &temp2);
+		command = getcommand(args[0], &path_split_temp);
 		if (command != NULL)
 			exit_code = runcommand(command, args);
-		my_free((void **)&temp1);
-		my_free((void **)&temp2);
+		my_free((void **)&input_split_temp);
+		my_free((void **)&path_split_temp);
 		free(args);
 		if (should_exit(command, exit_code))
 			break;

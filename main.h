@@ -45,7 +45,6 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 /* INPUT */
 char **get_input(int fd, char **temp);
 int get_line(char **lineptr, int *n, int fd);
-char **line_to_tokens(char *line);
 int get_in_fd(char *filename);
 
 /* ALIASES */
