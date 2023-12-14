@@ -34,15 +34,16 @@ int should_exit(cmd *command, int exit_code)
  */
 int main(int ac, char **argv, char **env)
 {
-	char **args = NULL;
-	char *temp1 = NULL, *temp2 = NULL;
+	char **args = NULL, *temp1 = NULL, *temp2 = NULL;
 	cmd *command = NULL;
-	int exit_code = 0;
+	int exit_code = 0, in_fd;
 
 	init_program(ac, argv, env);
+	in_fd = get_in_fd(argv[1]);
+
 	while (1)
 	{
-		args = get_input(STDIN_FILENO, &temp1);
+		args = get_input(in_fd, &temp1);
 		if (args == NULL)
 			break;
 		if (args[0] == NULL)
@@ -61,7 +62,8 @@ int main(int ac, char **argv, char **env)
 			break;
 	}
 	free_env_end();
-	if (isatty(STDIN_FILENO) && exit_code != -1)
+	if (isatty(in_fd) && exit_code != -1)
 		put_c('\n');
+	close(in_fd);
 	return (exit_status(GET_VARIABLE, 0));
 }

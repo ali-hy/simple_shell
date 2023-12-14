@@ -1,6 +1,51 @@
 #include "main.h"
 
 /**
+ * get_in_fd - gets the file directory of the passed script file
+ * @filename: name of the script file
+ * Return: the file directory int; else exits with error
+ */
+int get_in_fd(char *filename)
+{
+	int fd = STDIN_FILENO;
+	char *temp;
+
+	if (filename == NULL)
+	{
+		fd = STDIN_FILENO;
+	}
+	else
+	{
+		temp = concat("Cannot open ", filename);
+		if (access(filename, F_OK) == -1)
+		{
+			print_err(temp, "No such file");
+			free(temp);
+			exit(2);
+		}
+
+		if (access(filename, R_OK) == -1)
+		{
+			print_err(temp, "Permission Denied");
+			free(temp);
+			exit(2);
+		}
+
+		fd = open(filename, O_RDONLY);
+
+		if (fd == -1)
+		{
+			print_err(temp, "Unknown error");
+			free(temp);
+			exit(2);
+		}
+		free(temp);
+	}
+
+	return (fd);
+}
+
+/**
  * get_line - get a new line
  * @line_ptr: pointer to string that will hold lin
  * @n: pointer to max size to read

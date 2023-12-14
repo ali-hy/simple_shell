@@ -31,9 +31,8 @@ char **_env(enum access_options access_option, char **value);
 char **prog_args(char **value);
 void my_exit(int code);
 
-void init_program(int ac, char **argv, char **env);
-
 /* FLOW */
+void init_program(int ac, char **argv, char **env);
 int should_exit(cmd *command, int exit_code);
 
 /* TEST */
@@ -47,6 +46,7 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char **get_input(int fd, char **temp);
 int get_line(char **lineptr, int *n, int fd);
 char **line_to_tokens(char *line);
+int get_in_fd(char *filename);
 
 /* ALIASES */
 char resolve_aliases(char **aliases, char *line);
